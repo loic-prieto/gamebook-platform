@@ -8,7 +8,7 @@ import io.vavr.collection.List;
  * - each node
  * - general config of the book
  */
-public class Book {
+public class Gamebook {
     private LocalizedText title;
     private List<Node> nodes;
 }
