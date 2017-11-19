@@ -11,6 +11,7 @@ import lombok.Value;
  */
 @Value
 public class Gamebook {
+    private String identifier;
     private LocalizedText title;
     private Set<Node> nodes;
     private String author;
