@@ -3,6 +3,7 @@
 ## Gamebook
 
 ### Gamebook
+- identifier
 - title (MultilanguageText)
 - author
 - genres (Genre)
@@ -93,7 +94,6 @@
 - email
 - name
 - alias
-- password
 
 ### PaymentInfo
 - banc accounts (BankAccount)
