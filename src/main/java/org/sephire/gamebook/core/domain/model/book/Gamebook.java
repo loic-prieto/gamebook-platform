@@ -1,5 +1,6 @@
 package org.sephire.gamebook.core.domain.model.book;
 
+import io.vavr.collection.HashSet;
 import io.vavr.collection.Set;
 import lombok.NonNull;
 import lombok.Value;
@@ -16,9 +17,20 @@ public class Gamebook {
     private String identifier;
     @NonNull
     private LocalizedText title;
-    private Set<Node> nodes;
     @NonNull
     private String author;
-    private Set<Genre> genre;
+    private Set<Node> nodes;
+    private Set<Genre> genres;
 
+    private Gamebook(String identifier, LocalizedText title, String author) {
+        this.identifier = identifier;
+        this.title = title;
+        this.author = author;
+        this.nodes = HashSet.empty();
+        this.genres = HashSet.empty();
+    }
+
+    public static Gamebook minimalBook(String identifier, LocalizedText title, String author) {
+        return new Gamebook(identifier, title, author);
+    }
 }
