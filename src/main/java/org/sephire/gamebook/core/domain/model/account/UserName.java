@@ -4,10 +4,9 @@ import lombok.NonNull;
 import lombok.Value;
 
 @Value
-public class User {
+public class UserName {
     @NonNull
-    private Email email;
-    private UserName name;
-    private Alias alias;
-
+    private String firstName;
+    @NonNull
+    private String surname;
 }

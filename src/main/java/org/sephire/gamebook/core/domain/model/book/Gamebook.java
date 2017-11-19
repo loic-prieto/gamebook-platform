@@ -1,6 +1,7 @@
 package org.sephire.gamebook.core.domain.model.book;
 
 import io.vavr.collection.Set;
+import lombok.NonNull;
 import lombok.Value;
 
 /**
@@ -11,9 +12,12 @@ import lombok.Value;
  */
 @Value
 public class Gamebook {
+    @NonNull
     private String identifier;
+    @NonNull
     private LocalizedText title;
     private Set<Node> nodes;
+    @NonNull
     private String author;
     private Set<Genre> genre;
 
