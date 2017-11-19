@@ -28,6 +28,7 @@ public class NewGamebookSpecification implements Specification<Gamebook> {
         return new NotNullSpecification<Gamebook>()
                 .and(titleIsUnique)
                 .and(fieldNotNull(g -> g.getAuthor()))
+                .and(fieldNotNull(g -> g.getTitle()))
                 .isSatisfiedBy(gamebook);
 
     }
