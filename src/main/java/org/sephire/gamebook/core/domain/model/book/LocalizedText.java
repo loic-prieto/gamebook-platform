@@ -2,6 +2,7 @@ package org.sephire.gamebook.core.domain.model.book;
 
 import io.vavr.Tuple2;
 import io.vavr.collection.HashMap;
+import io.vavr.collection.List;
 import io.vavr.collection.Map;
 import io.vavr.collection.Stream;
 import io.vavr.control.Option;
@@ -23,5 +24,9 @@ public class LocalizedText {
 
     public Option<String> getTextFor(Locale locale) {
         return this.localized_texts.get(locale);
+    }
+
+    public List<Tuple2<Locale, String>> getAllTitles() {
+        return this.localized_texts.toList();
     }
 }
