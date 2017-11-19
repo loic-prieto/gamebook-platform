@@ -1,6 +1,7 @@
 package org.sephire.gamebook.core.domain.model.book;
 
-import io.vavr.collection.List;
+import io.vavr.collection.Set;
+import lombok.Value;
 
 /**
  * A book is the root entity that holds all of the content of
@@ -8,7 +9,11 @@ import io.vavr.collection.List;
  * - each node
  * - general config of the book
  */
+@Value
 public class Gamebook {
     private LocalizedText title;
-    private List<Node> nodes;
+    private Set<Node> nodes;
+    private String author;
+    private Set<Genre> genre;
+
 }
