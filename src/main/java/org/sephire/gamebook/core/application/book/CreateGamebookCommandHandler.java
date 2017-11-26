@@ -11,7 +11,7 @@ import org.sephire.gamebook.core.domain.model.book.Gamebook;
 import org.sephire.gamebook.core.domain.model.book.GamebookCreatedEvent;
 import org.sephire.gamebook.core.domain.model.book.GamebookRepository;
 import org.sephire.gamebook.core.domain.model.book.NewGamebookSpecification;
-import org.sephire.gamebook.core.domain.shared.events.DomainError;
+import org.sephire.gamebook.core.domain.shared.events.DomainException;
 import org.sephire.gamebook.core.domain.shared.events.EventEmitter;
 import org.sephire.gamebook.core.domain.shared.repositories.RepositoryException;
 
@@ -25,28 +25,30 @@ public class CreateGamebookCommandHandler implements CommandHandler<CreateGamebo
 
     public CreateGamebookCommandHandler(GamebookRepository gamebookRepository, EventEmitter eventEmitter) {
         this.gamebookRepository = gamebookRepository;
+        this.eventEmitter = eventEmitter;
     }
 
     @Override
     public Either<List<CommandError>, Gamebook> execute(CreateGamebookCommand command) {
-        Gamebook gamebook = Gamebook.minimalBook(command.getIdentifier(), command.getTitle(), command.getAuthor());
 
         List<CommandError> errors = List.empty();
+        Gamebook gamebook = null;
 
         try {
+            gamebook = Gamebook.minimalBook(command.getIdentifier(), command.getTitle(), command.getAuthor());
             NewGamebookSpecification bookSpecification = new NewGamebookSpecification(gamebookRepository);
             if (bookSpecification.isSatisfiedBy(gamebook)) {
                 gamebookRepository.storeGamebook(gamebook);
                 eventEmitter.fireEvent(new GamebookCreatedEvent(gamebook));
             } else {
-                errors.append(new InvalidGamebookError());
+                errors = errors.append(new InvalidGamebookError());
             }
         } catch (RepositoryException e) {
-            errors.append(new RepositoryError());
-            eventEmitter.fireEvent(new DomainError(e));
-        } catch (Exception e) {
-            errors.append(new ExceptionalError(e));
-            eventEmitter.fireEvent(new DomainError(e));
+            errors = errors.append(new RepositoryError());
+            eventEmitter.fireEvent(new DomainException(e));
+        } catch (Throwable t) {
+            errors = errors.append(new ExceptionalError(t));
+            eventEmitter.fireEvent(new DomainException(t));
         }
 
         return errors.isEmpty() ?
