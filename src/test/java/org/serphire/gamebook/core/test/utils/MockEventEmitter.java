@@ -13,15 +13,15 @@ public class MockEventEmitter implements EventEmitter {
 
     @Override
     public void fireEvent(DomainEvent event) {
-        this.firedEvents.append(event);
+        firedEvents = firedEvents.append(event);
     }
 
     public int countFiredEvents() {
-        return this.firedEvents.length();
+        return firedEvents.length();
     }
 
     public boolean hasFiredEventOfType(Class<? extends DomainEvent> eventType) {
-        return this.firedEvents
+        return firedEvents
                 .filter((event) -> event.getClass().equals(eventType))
                 .length() > 0;
     }
