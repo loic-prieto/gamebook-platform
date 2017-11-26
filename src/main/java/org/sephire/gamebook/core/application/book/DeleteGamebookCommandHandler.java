@@ -1,11 +1,16 @@
 package org.sephire.gamebook.core.application.book;
 
+import io.vavr.collection.List;
+import io.vavr.control.Either;
+import org.sephire.gamebook.core.application.shared.commands.CommandError;
 import org.sephire.gamebook.core.application.shared.commands.CommandHandler;
-import org.sephire.gamebook.core.application.shared.commands.CommandResult;
-import org.sephire.gamebook.core.domain.model.book.Gamebook;
+import org.sephire.gamebook.core.application.shared.commands.ExceptionalError;
+import org.sephire.gamebook.core.application.shared.commands.RepositoryError;
 import org.sephire.gamebook.core.domain.model.book.GamebookDeletedEvent;
 import org.sephire.gamebook.core.domain.model.book.GamebookRepository;
+import org.sephire.gamebook.core.domain.shared.events.DomainException;
 import org.sephire.gamebook.core.domain.shared.events.EventEmitter;
+import org.sephire.gamebook.core.domain.shared.repositories.RepositoryException;
 
 public class DeleteGamebookCommandHandler implements CommandHandler<DeleteGamebookCommand, Void> {
 
@@ -17,15 +22,28 @@ public class DeleteGamebookCommandHandler implements CommandHandler<DeleteGamebo
         this.eventEmitter = eventEmitter;
     }
 
+
     @Override
-    public CommandResult<Void> execute(DeleteGamebookCommand command) {
+    public Either<List<CommandError>, Void> execute(DeleteGamebookCommand command) {
 
-        Gamebook gamebook = gamebookRepository.findGamebook(command.getIdentifier())
-                .getOrElseThrow(() -> new RuntimeException("Book " + command.getIdentifier() + " was not found"));
+        List<CommandError> errors = List.empty();
 
-        gamebookRepository.deleteGamebook(gamebook);
-        eventEmitter.fireEvent(new GamebookDeletedEvent(gamebook));
+        try {
+            gamebookRepository.findGamebook(command.getIdentifier())
+                    .peek((gamebook) -> {
+                        gamebookRepository.deleteGamebook(gamebook);
+                        eventEmitter.fireEvent(new GamebookDeletedEvent(gamebook));
+                    });
+        } catch (RepositoryException e) {
+            errors = errors.append(new RepositoryError());
+            eventEmitter.fireEvent(new DomainException(e));
+        } catch (Throwable t) {
+            errors = errors.append(new ExceptionalError(t));
+            eventEmitter.fireEvent(new DomainException(t));
+        }
 
-        return () -> null;
+        return errors.isEmpty() ?
+                Either.right(null) :
+                Either.left(errors);
     }
 }
