@@ -6,11 +6,14 @@ import io.vavr.control.Either;
 import org.sephire.gamebook.core.application.shared.commands.CommandError;
 import org.sephire.gamebook.core.application.shared.commands.CommandHandler;
 import org.sephire.gamebook.core.application.shared.commands.ExceptionalError;
+import org.sephire.gamebook.core.application.shared.commands.RepositoryError;
 import org.sephire.gamebook.core.domain.model.book.Gamebook;
 import org.sephire.gamebook.core.domain.model.book.GamebookCreatedEvent;
 import org.sephire.gamebook.core.domain.model.book.GamebookRepository;
 import org.sephire.gamebook.core.domain.model.book.NewGamebookSpecification;
+import org.sephire.gamebook.core.domain.shared.events.DomainError;
 import org.sephire.gamebook.core.domain.shared.events.EventEmitter;
+import org.sephire.gamebook.core.domain.shared.repositories.RepositoryException;
 
 /**
  * Covers the create gamebook use case.
@@ -29,17 +32,21 @@ public class CreateGamebookCommandHandler implements CommandHandler<CreateGamebo
         Gamebook gamebook = Gamebook.minimalBook(command.getIdentifier(), command.getTitle(), command.getAuthor());
 
         List<CommandError> errors = List.empty();
-        NewGamebookSpecification bookSpecification = new NewGamebookSpecification(gamebookRepository);
 
-        if (bookSpecification.isSatisfiedBy(gamebook)) {
-            try {
+        try {
+            NewGamebookSpecification bookSpecification = new NewGamebookSpecification(gamebookRepository);
+            if (bookSpecification.isSatisfiedBy(gamebook)) {
                 gamebookRepository.storeGamebook(gamebook);
                 eventEmitter.fireEvent(new GamebookCreatedEvent(gamebook));
-            } catch (Exception e) {
-                errors.append(new ExceptionalError(e));
+            } else {
+                errors.append(new InvalidGamebookError());
             }
-        } else {
-            errors.append(new InvalidGamebookError());
+        } catch (RepositoryException e) {
+            errors.append(new RepositoryError());
+            eventEmitter.fireEvent(new DomainError(e));
+        } catch (Exception e) {
+            errors.append(new ExceptionalError(e));
+            eventEmitter.fireEvent(new DomainError(e));
         }
 
         return errors.isEmpty() ?
