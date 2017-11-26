@@ -1,9 +1,11 @@
 package org.sephire.gamebook.core.application.book;
 
 
-import io.vavr.control.Option;
+import io.vavr.collection.List;
+import io.vavr.control.Either;
+import org.sephire.gamebook.core.application.shared.commands.CommandError;
 import org.sephire.gamebook.core.application.shared.commands.CommandHandler;
-import org.sephire.gamebook.core.application.shared.commands.CommandResult;
+import org.sephire.gamebook.core.application.shared.commands.ExceptionalError;
 import org.sephire.gamebook.core.domain.model.book.Gamebook;
 import org.sephire.gamebook.core.domain.model.book.GamebookCreatedEvent;
 import org.sephire.gamebook.core.domain.model.book.GamebookRepository;
@@ -18,23 +20,30 @@ public class CreateGamebookCommandHandler implements CommandHandler<CreateGamebo
     private GamebookRepository gamebookRepository;
     private EventEmitter eventEmitter;
 
-    public CreateGamebookCommandHandler(GamebookRepository gamebookRepository) {
+    public CreateGamebookCommandHandler(GamebookRepository gamebookRepository, EventEmitter eventEmitter) {
         this.gamebookRepository = gamebookRepository;
     }
 
     @Override
-    public CommandResult<Gamebook> execute(CreateGamebookCommand command) {
+    public Either<List<CommandError>, Gamebook> execute(CreateGamebookCommand command) {
         Gamebook gamebook = Gamebook.minimalBook(command.getIdentifier(), command.getTitle(), command.getAuthor());
 
-        boolean isValid = new NewGamebookSpecification(gamebookRepository).isSatisfiedBy(gamebook);
+        List<CommandError> errors = List.empty();
+        NewGamebookSpecification bookSpecification = new NewGamebookSpecification(gamebookRepository);
 
-        Option<Gamebook> result = isValid ? Option.of(gamebook) : Option.none();
-        if (isValid) {
-            gamebookRepository.storeGamebook(gamebook);
+        if (bookSpecification.isSatisfiedBy(gamebook)) {
+            try {
+                gamebookRepository.storeGamebook(gamebook);
+                eventEmitter.fireEvent(new GamebookCreatedEvent(gamebook));
+            } catch (Exception e) {
+                errors.append(new ExceptionalError(e));
+            }
+        } else {
+            errors.append(new InvalidGamebookError());
         }
 
-        eventEmitter.fireEvent(new GamebookCreatedEvent(gamebook));
-
-        return () -> result;
+        return errors.isEmpty() ?
+                Either.right(gamebook) :
+                Either.left(errors);
     }
 }
