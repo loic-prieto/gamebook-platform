@@ -10,7 +10,7 @@
 - nodes (Node)
 - use cases
   - create book
-  - delete book
+  - delete book (only owned book)
   - update book details
   - export book 
   - add genre

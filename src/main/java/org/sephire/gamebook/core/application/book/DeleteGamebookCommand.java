@@ -7,4 +7,6 @@ import lombok.Value;
 public class DeleteGamebookCommand {
     @NonNull
     private String identifier;
+    @NonNull
+    private String author;
 }
