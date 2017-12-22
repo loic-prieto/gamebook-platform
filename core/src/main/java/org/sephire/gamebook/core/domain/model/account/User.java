@@ -10,4 +10,7 @@ public class User {
     private UserName name;
     private Alias alias;
 
+    public static User minimalUser(String userEmail, String alias) {
+        return new User(new Email(userEmail), null, new Alias(alias));
+    }
 }
