@@ -20,8 +20,9 @@ public class CreateUserAccountCommandHandler implements CommandHandler<CreateUse
     private UserAccountRepository userAccountRepository;
     private EventEmitter eventEmitter;
 
-    public CreateUserAccountCommandHandler(UserAccountRepository userAccountRepository) {
+    public CreateUserAccountCommandHandler(UserAccountRepository userAccountRepository, EventEmitter eventEmitter) {
         this.userAccountRepository = userAccountRepository;
+        this.eventEmitter = eventEmitter;
     }
 
     @Override
@@ -36,7 +37,7 @@ public class CreateUserAccountCommandHandler implements CommandHandler<CreateUse
                 account = userAccountRepository.storeUserAccount(account);
                 eventEmitter.fireEvent(new UserAccountCreatedEvent(account));
             } else {
-                errors.append(new InvalidUserAccountError());
+                errors = errors.append(new InvalidUserAccountError());
             }
         } catch (RepositoryException e) {
             errors = errors.append(new RepositoryError());

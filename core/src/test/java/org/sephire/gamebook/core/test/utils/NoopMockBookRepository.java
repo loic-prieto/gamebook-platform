@@ -1,5 +1,7 @@
 package org.sephire.gamebook.core.test.utils;
 
+import io.vavr.collection.HashSet;
+import io.vavr.collection.Set;
 import io.vavr.control.Option;
 import org.sephire.gamebook.core.domain.model.book.Gamebook;
 import org.sephire.gamebook.core.domain.model.book.GamebookRepository;
@@ -27,5 +29,10 @@ public class NoopMockBookRepository implements GamebookRepository {
 
     @Override
     public void deleteGamebook(Gamebook gamebook) {
+    }
+
+    @Override
+    public Set<Gamebook> findGamebooks(String titleFilter) {
+        return HashSet.empty();
     }
 }

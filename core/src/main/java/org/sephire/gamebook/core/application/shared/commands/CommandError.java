@@ -10,5 +10,5 @@ package org.sephire.gamebook.core.application.shared.commands;
  * error. The client should recognize the class of the error and
  * act accordingly.
  */
-public abstract class CommandError {
+public abstract class CommandError extends Throwable {
 }

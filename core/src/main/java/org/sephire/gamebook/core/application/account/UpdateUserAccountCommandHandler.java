@@ -36,7 +36,7 @@ public class UpdateUserAccountCommandHandler implements CommandHandler<UpdateUse
                 account = userAccountRepository.storeUserAccount(account);
                 eventEmitter.fireEvent(new UserAccountUpdatedEvent(account));
             } else {
-                errors.append(new InvalidUserAccountError());
+                errors = errors.append(new InvalidUserAccountError());
             }
         } catch (RepositoryException e) {
             errors = errors.append(new RepositoryError());

@@ -23,7 +23,7 @@ import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@DisplayName("A create sephire.org.gamebook command,")
+@DisplayName("A create gamebook command,")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class CreateGamebookCommandHandlerTest {
 

@@ -17,7 +17,7 @@ public class UpdateUserAccountSpecification implements Specification<UserAccount
 
         Specification<UserAccount> userExists = (ua) -> {
             return userAccountRepository
-                    .findUserAccount(ua.getUser())
+                    .findUserAccount(ua.getUser().getAlias().getValue())
                     .isDefined();
         };
 

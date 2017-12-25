@@ -5,7 +5,7 @@ import io.vavr.control.Option;
 public interface UserAccountRepository {
     public UserAccount storeUserAccount(UserAccount userAccount);
 
-    public Option<UserAccount> findUserAccount(User user);
+    public Option<UserAccount> findUserAccount(String userAlias);
 
     public void deleteUserAccount(UserAccount userAccount);
 }

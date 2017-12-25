@@ -14,7 +14,7 @@ public class NewUserAccountSpecification implements Specification<UserAccount> {
     @Override
     public boolean isSatisfiedBy(UserAccount userAccount) {
         Specification<UserAccount> userIsNotAlreadyRegistered = (ua) -> {
-            return userAccountRepository.findUserAccount(ua.getUser()).isEmpty();
+            return userAccountRepository.findUserAccount(ua.getUser().getAlias().getValue()).isEmpty();
         };
 
         return new NotNullSpecification<UserAccount>()

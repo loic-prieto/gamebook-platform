@@ -25,4 +25,12 @@ public class UserAccount {
                 HashSet.empty()
         );
     }
+
+    public UserAccount updateUserData(User user) {
+        return new UserAccount(user, accountType, paymentInfo, writtenBooks, ownedBooks);
+    }
+
+    public UserAccount addGamebook(Gamebook gamebook) {
+        return new UserAccount(user, accountType, paymentInfo, writtenBooks, ownedBooks.add(gamebook));
+    }
 }
