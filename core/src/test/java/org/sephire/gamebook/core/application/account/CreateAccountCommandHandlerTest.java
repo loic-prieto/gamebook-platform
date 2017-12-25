@@ -8,9 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.sephire.gamebook.core.application.shared.commands.CommandError;
-import org.sephire.gamebook.core.domain.model.account.AccountType;
-import org.sephire.gamebook.core.domain.model.account.UserAccount;
-import org.sephire.gamebook.core.domain.model.account.UserAccountCreatedEvent;
+import org.sephire.gamebook.core.domain.model.account.*;
 import org.sephire.gamebook.core.domain.shared.events.DomainException;
 import org.sephire.gamebook.core.domain.shared.repositories.RepositoryException;
 import org.sephire.gamebook.core.test.utils.MockEventEmitter;
@@ -92,8 +90,8 @@ public class CreateAccountCommandHandlerTest {
 
     private class AliasAlreadyTakenUserAccountRepository extends NoopUserAccountRepository {
         @Override
-        public Option<UserAccount> findUserAccount(String userAlias) {
-            return Option.of(UserAccount.minimalAccount("test", userAlias));
+        public Option<UserAccount> findUserAccount(Alias userAlias) {
+            return Option.of(UserAccount.minimalAccount(new Email("test@mail"), userAlias));
         }
     }
 }

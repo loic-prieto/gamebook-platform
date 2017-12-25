@@ -11,8 +11,8 @@ public class User {
     @NonNull
     private Alias alias;
 
-    public static User minimalUser(String userEmail, String alias) {
-        return new User(new Email(userEmail), null, new Alias(alias));
+    public static User minimalUser(Email userEmail, Alias alias) {
+        return new User(userEmail, null, alias);
     }
 
     public User changeEmail(Email email) {

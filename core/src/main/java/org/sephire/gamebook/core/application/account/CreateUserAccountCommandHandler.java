@@ -31,7 +31,7 @@ public class CreateUserAccountCommandHandler implements CommandHandler<CreateUse
         UserAccount account = null;
 
         try {
-            account = UserAccount.minimalAccount(command.getEmail(), command.getEmail());
+            account = UserAccount.minimalAccount(command.getEmail(), command.getAlias());
             Specification<UserAccount> specification = new NewUserAccountSpecification(userAccountRepository);
             if (specification.isSatisfiedBy(account)) {
                 account = userAccountRepository.storeUserAccount(account);

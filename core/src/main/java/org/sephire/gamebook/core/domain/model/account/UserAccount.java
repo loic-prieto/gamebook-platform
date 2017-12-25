@@ -16,7 +16,7 @@ public class UserAccount {
     private Set<GamebookInfo> writtenBooks;
     private Set<Gamebook> ownedBooks;
 
-    public static UserAccount minimalAccount(String userEmail, String userAlias) {
+    public static UserAccount minimalAccount(Email userEmail, Alias userAlias) {
         return new UserAccount(
                 User.minimalUser(userEmail, userAlias),
                 AccountType.Basic,
@@ -32,5 +32,9 @@ public class UserAccount {
 
     public UserAccount addGamebook(Gamebook gamebook) {
         return new UserAccount(user, accountType, paymentInfo, writtenBooks, ownedBooks.add(gamebook));
+    }
+
+    public UserAccount updatePaymentInfo(PaymentInfo paymentInfo) {
+        return new UserAccount(user, accountType, paymentInfo, writtenBooks, ownedBooks);
     }
 }

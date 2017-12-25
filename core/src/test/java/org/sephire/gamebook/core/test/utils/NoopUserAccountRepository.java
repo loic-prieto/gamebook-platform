@@ -1,6 +1,7 @@
 package org.sephire.gamebook.core.test.utils;
 
 import io.vavr.control.Option;
+import org.sephire.gamebook.core.domain.model.account.Alias;
 import org.sephire.gamebook.core.domain.model.account.UserAccount;
 import org.sephire.gamebook.core.domain.model.account.UserAccountRepository;
 
@@ -15,7 +16,7 @@ public class NoopUserAccountRepository implements UserAccountRepository {
     }
 
     @Override
-    public Option<UserAccount> findUserAccount(String userAlias) {
+    public Option<UserAccount> findUserAccount(Alias userAlias) {
         return Option.none();
     }
 
