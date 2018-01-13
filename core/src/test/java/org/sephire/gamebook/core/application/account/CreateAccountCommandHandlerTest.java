@@ -30,7 +30,7 @@ public class CreateAccountCommandHandlerTest {
     @Test
     public void testWithValidParams() {
         CreateUserAccountCommandHandler handler = new CreateUserAccountCommandHandler(new NoopUserAccountRepository(), mockEventEmitter);
-        CreateUserAccountCommand validParams = new CreateUserAccountCommand("test@test.test", "alias");
+        CreateUserAccountCommand validParams = new CreateUserAccountCommand(new Email("test@test.test"), new Alias("alias"));
 
         Either<List<CommandError>, UserAccount> result = handler.execute(validParams);
 
@@ -43,7 +43,7 @@ public class CreateAccountCommandHandlerTest {
     @Test
     public void testWithFailingRepository() {
         CreateUserAccountCommandHandler handler = new CreateUserAccountCommandHandler(new FailingUserAccountRepository(), mockEventEmitter);
-        CreateUserAccountCommand validParams = new CreateUserAccountCommand("test@test.test", "alias");
+        CreateUserAccountCommand validParams = new CreateUserAccountCommand(new Email("test@test.test"), new Alias("alias"));
 
         Either<List<CommandError>, UserAccount> result = handler.execute(validParams);
 
@@ -55,7 +55,7 @@ public class CreateAccountCommandHandlerTest {
     @Test
     public void testWithRandomException() {
         CreateUserAccountCommandHandler handler = new CreateUserAccountCommandHandler(new RandomExceptionUserAccountRepository(), mockEventEmitter);
-        CreateUserAccountCommand validParams = new CreateUserAccountCommand("test@test.test", "alias");
+        CreateUserAccountCommand validParams = new CreateUserAccountCommand(new Email("test@test.test"), new Alias("alias"));
 
         Either<List<CommandError>, UserAccount> result = handler.execute(validParams);
 
@@ -67,7 +67,7 @@ public class CreateAccountCommandHandlerTest {
     @Test
     public void testWithAlreadyTakenAlias() {
         CreateUserAccountCommandHandler handler = new CreateUserAccountCommandHandler(new AliasAlreadyTakenUserAccountRepository(), mockEventEmitter);
-        CreateUserAccountCommand invalidParams = new CreateUserAccountCommand("test@test.test", "alias");
+        CreateUserAccountCommand invalidParams = new CreateUserAccountCommand(new Email("test@test.test"), new Alias("alias"));
 
         Either<List<CommandError>, UserAccount> result = handler.execute(invalidParams);
 
