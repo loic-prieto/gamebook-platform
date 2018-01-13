@@ -46,7 +46,7 @@ public class UpdateAccountCommandHandlerTest {
     @DisplayName("when executed with invalid parameters,")
     @Test
     public void testWithInvalidParams() {
-        UpdateUserAccountCommandHandler handler = new UpdateUserAccountCommandHandler(new FindsNoUserUserAccountRepository(), mockEventEmitter);
+        UpdateUserAccountCommandHandler handler = new UpdateUserAccountCommandHandler(new NoopUserAccountRepository(), mockEventEmitter);
         UserAccount updatingUserAccount = UserAccount.minimalAccount(new Email("test"), new Alias("alias"));
         UpdateUserAccountCommand invalidParams = new UpdateUserAccountCommand(updatingUserAccount);
 
@@ -62,10 +62,4 @@ public class UpdateAccountCommandHandlerTest {
         }
     }
 
-    private class FindsNoUserUserAccountRepository extends NoopUserAccountRepository {
-        @Override
-        public Option<UserAccount> findUserAccount(Alias userAlias) {
-            return Option.none();
-        }
-    }
 }

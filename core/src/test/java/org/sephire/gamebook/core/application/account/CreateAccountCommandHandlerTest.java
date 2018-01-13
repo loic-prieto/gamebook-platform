@@ -10,9 +10,10 @@ import org.junit.jupiter.api.TestInstance;
 import org.sephire.gamebook.core.application.shared.commands.CommandError;
 import org.sephire.gamebook.core.domain.model.account.*;
 import org.sephire.gamebook.core.domain.shared.events.DomainException;
-import org.sephire.gamebook.core.domain.shared.repositories.RepositoryException;
+import org.sephire.gamebook.core.test.utils.BackendFailingUserAccountRepository;
 import org.sephire.gamebook.core.test.utils.MockEventEmitter;
 import org.sephire.gamebook.core.test.utils.NoopUserAccountRepository;
+import org.sephire.gamebook.core.test.utils.RandomFailingUserAccountRepository;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -42,7 +43,7 @@ public class CreateAccountCommandHandlerTest {
     @DisplayName("when executed with a failing repository,")
     @Test
     public void testWithFailingRepository() {
-        CreateUserAccountCommandHandler handler = new CreateUserAccountCommandHandler(new FailingUserAccountRepository(), mockEventEmitter);
+        CreateUserAccountCommandHandler handler = new CreateUserAccountCommandHandler(new BackendFailingUserAccountRepository(), mockEventEmitter);
         CreateUserAccountCommand validParams = new CreateUserAccountCommand(new Email("test@test.test"), new Alias("alias"));
 
         Either<List<CommandError>, UserAccount> result = handler.execute(validParams);
@@ -54,7 +55,7 @@ public class CreateAccountCommandHandlerTest {
     @DisplayName("when executed with a random exception,")
     @Test
     public void testWithRandomException() {
-        CreateUserAccountCommandHandler handler = new CreateUserAccountCommandHandler(new RandomExceptionUserAccountRepository(), mockEventEmitter);
+        CreateUserAccountCommandHandler handler = new CreateUserAccountCommandHandler(new RandomFailingUserAccountRepository(), mockEventEmitter);
         CreateUserAccountCommand validParams = new CreateUserAccountCommand(new Email("test@test.test"), new Alias("alias"));
 
         Either<List<CommandError>, UserAccount> result = handler.execute(validParams);
@@ -72,20 +73,6 @@ public class CreateAccountCommandHandlerTest {
         Either<List<CommandError>, UserAccount> result = handler.execute(invalidParams);
 
         assertTrue(result.isLeft(), "should return errors");
-    }
-
-    private class FailingUserAccountRepository extends NoopUserAccountRepository {
-        @Override
-        public UserAccount storeUserAccount(UserAccount userAccount) {
-            throw new RepositoryException();
-        }
-    }
-
-    private class RandomExceptionUserAccountRepository extends NoopUserAccountRepository {
-        @Override
-        public UserAccount storeUserAccount(UserAccount userAccount) {
-            throw new RuntimeException();
-        }
     }
 
     private class AliasAlreadyTakenUserAccountRepository extends NoopUserAccountRepository {
