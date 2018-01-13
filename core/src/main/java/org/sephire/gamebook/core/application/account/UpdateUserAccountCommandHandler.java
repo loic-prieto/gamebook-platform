@@ -33,8 +33,8 @@ public class UpdateUserAccountCommandHandler implements CommandHandler<UpdateUse
         try {
             Specification<UserAccount> specification = new UpdateUserAccountSpecification(userAccountRepository);
             if (specification.isSatisfiedBy(account)) {
-                account = userAccountRepository.storeUserAccount(account);
-                eventEmitter.fireEvent(new UserAccountUpdatedEvent(account));
+                UserAccount updatedAccount = userAccountRepository.storeUserAccount(account);
+                eventEmitter.fireEvent(new UserAccountUpdatedEvent(updatedAccount, account));
             } else {
                 errors = errors.append(new InvalidUserAccountError());
             }

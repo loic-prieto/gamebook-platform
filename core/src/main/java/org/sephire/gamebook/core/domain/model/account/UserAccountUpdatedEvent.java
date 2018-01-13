@@ -9,6 +9,9 @@ import org.sephire.gamebook.core.domain.shared.events.DomainEvent;
 public class UserAccountUpdatedEvent extends DomainEvent {
     @NonNull
     @Getter
-    private UserAccount userAccount;
+    private UserAccount updatedUserAccount;
+    @NonNull
+    @Getter
+    private UserAccount oldUserAccount;
 
 }
