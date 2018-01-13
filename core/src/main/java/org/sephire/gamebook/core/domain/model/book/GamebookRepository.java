@@ -8,7 +8,7 @@ public interface GamebookRepository {
 
     public Option<Gamebook> findGamebookByTitle(String title);
 
-    public Set<Gamebook> findGamebooks(String titleFilter);
+    public Set<Gamebook> findGamebooks(Option<String> titleFilter);
 
     public Gamebook storeGamebook(Gamebook gamebook);
 

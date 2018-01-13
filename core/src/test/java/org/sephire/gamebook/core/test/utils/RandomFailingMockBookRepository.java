@@ -1,6 +1,5 @@
 package org.sephire.gamebook.core.test.utils;
 
-import io.vavr.collection.HashSet;
 import io.vavr.collection.Set;
 import io.vavr.control.Option;
 import org.sephire.gamebook.core.domain.model.book.Gamebook;
@@ -8,31 +7,31 @@ import org.sephire.gamebook.core.domain.model.book.GamebookRepository;
 
 
 /**
- * This is a test book repository that mimicks a repository with no
- * registered books whatsoever and that won't store anything.
+ * This is a test book repository that fails with a runtime exception in every operation.
  */
-public class NoopMockBookRepository implements GamebookRepository {
+public class RandomFailingMockBookRepository implements GamebookRepository {
     @Override
     public Option<Gamebook> findGamebook(String identifier) {
-        return Option.none();
+        throw new RuntimeException();
     }
 
     @Override
     public Option<Gamebook> findGamebookByTitle(String title) {
-        return Option.none();
+        throw new RuntimeException();
     }
 
     @Override
     public Gamebook storeGamebook(Gamebook gamebook) {
-        return gamebook;
+        throw new RuntimeException();
     }
 
     @Override
     public void deleteGamebook(Gamebook gamebook) {
+        throw new RuntimeException();
     }
 
     @Override
     public Set<Gamebook> findGamebooks(Option<String> titleFilter) {
-        return HashSet.empty();
+        throw new RuntimeException();
     }
 }

@@ -17,6 +17,7 @@ import org.sephire.gamebook.core.domain.shared.events.DomainException;
 import org.sephire.gamebook.core.domain.shared.repositories.RepositoryException;
 import org.sephire.gamebook.core.test.utils.MockEventEmitter;
 import org.sephire.gamebook.core.test.utils.NoopMockBookRepository;
+import org.sephire.gamebook.core.test.utils.RandomFailingMockBookRepository;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -72,7 +73,7 @@ public class DeleteGamebookCommandHandlerTest {
     @Test
     @DisplayName("when executed with an unknown exception,")
     public void testWithRandomException() {
-        DeleteGamebookCommandHandler handler = new DeleteGamebookCommandHandler(new RandomFailingRepoMock(), mockEventEmitter);
+        DeleteGamebookCommandHandler handler = new DeleteGamebookCommandHandler(new RandomFailingMockBookRepository(), mockEventEmitter);
         DeleteGamebookCommand validParams = new DeleteGamebookCommand("test1", "test");
 
         Either<List<CommandError>, Void> result = handler.execute(validParams);
@@ -109,10 +110,4 @@ public class DeleteGamebookCommandHandlerTest {
         }
     }
 
-    private class RandomFailingRepoMock extends NoopMockBookRepository {
-        @Override
-        public Option<Gamebook> findGamebook(String identifier) {
-            throw new RuntimeException();
-        }
-    }
 }

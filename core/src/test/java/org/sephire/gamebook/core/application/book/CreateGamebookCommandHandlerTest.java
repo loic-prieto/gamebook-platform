@@ -15,9 +15,10 @@ import org.sephire.gamebook.core.domain.model.book.Gamebook;
 import org.sephire.gamebook.core.domain.model.book.GamebookCreatedEvent;
 import org.sephire.gamebook.core.domain.model.book.LocalizedText;
 import org.sephire.gamebook.core.domain.shared.events.DomainException;
-import org.sephire.gamebook.core.domain.shared.repositories.RepositoryException;
+import org.sephire.gamebook.core.test.utils.BackendFailingMockBookRepository;
 import org.sephire.gamebook.core.test.utils.MockEventEmitter;
 import org.sephire.gamebook.core.test.utils.NoopMockBookRepository;
+import org.sephire.gamebook.core.test.utils.RandomFailingMockBookRepository;
 
 import java.util.Locale;
 
@@ -67,7 +68,7 @@ public class CreateGamebookCommandHandlerTest {
     @DisplayName("when executed with a failing storage,")
     @Test
     public void testWithFailingStorage() {
-        CreateGamebookCommandHandler handler = new CreateGamebookCommandHandler(new FailingMockBookRepository(), mockEventEmitter);
+        CreateGamebookCommandHandler handler = new CreateGamebookCommandHandler(new BackendFailingMockBookRepository(), mockEventEmitter);
         CreateGamebookCommand validParams = new CreateGamebookCommand(
                 "id",
                 "author",
@@ -84,7 +85,7 @@ public class CreateGamebookCommandHandlerTest {
     @DisplayName("when executed with an unknown exception,")
     @Test
     public void testWithRandomException() {
-        CreateGamebookCommandHandler handler = new CreateGamebookCommandHandler(new RandomExceptionBookRepository(), mockEventEmitter);
+        CreateGamebookCommandHandler handler = new CreateGamebookCommandHandler(new RandomFailingMockBookRepository(), mockEventEmitter);
         CreateGamebookCommand validParams = new CreateGamebookCommand(
                 "id",
                 "author",
@@ -98,19 +99,6 @@ public class CreateGamebookCommandHandlerTest {
         assertTrue(mockEventEmitter.hasFiredEventOfType(DomainException.class), "should have fired error event");
     }
 
-    private class FailingMockBookRepository extends NoopMockBookRepository {
-        @Override
-        public Gamebook storeGamebook(Gamebook gamebook) {
-            throw new RepositoryException();
-        }
-    }
-
-    private class RandomExceptionBookRepository extends NoopMockBookRepository {
-        @Override
-        public Option<Gamebook> findGamebookByTitle(String title) {
-            throw new RuntimeException();
-        }
-    }
 
     private class AlreadyTakenBookRepository extends NoopMockBookRepository {
         @Override
