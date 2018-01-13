@@ -9,6 +9,9 @@ package org.sephire.gamebook.core.application.shared.commands;
  * of the CommandError itself will serve as an identifier of the
  * error. The client should recognize the class of the error and
  * act accordingly.
+ * A command error can be produced by bad client input, or by a
+ * server error.
  */
 public abstract class CommandError extends Throwable {
+
 }

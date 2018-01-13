@@ -5,5 +5,5 @@ package org.sephire.gamebook.core.application.shared.commands;
  * operation for which it has no authorization.
  * This can be further subclassed to provide more detail.
  */
-public class NotAuthorizedOperationError extends CommandError {
+public class NotAuthorizedOperationError extends CommandClientError {
 }
