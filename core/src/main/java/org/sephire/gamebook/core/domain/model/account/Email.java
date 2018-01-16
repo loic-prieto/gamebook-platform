@@ -7,4 +7,9 @@ import lombok.Value;
 public class Email {
     @NonNull
     private String value;
+
+    @Override
+    public String toString() {
+        return value;
+    }
 }

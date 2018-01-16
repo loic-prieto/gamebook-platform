@@ -1,6 +1,7 @@
 package org.sephire.gamebook.core.infrastructure.events;
 
 import io.vavr.Function1;
+import io.vavr.collection.HashMap;
 import io.vavr.collection.List;
 import io.vavr.collection.Map;
 import io.vavr.control.Option;
@@ -10,6 +11,10 @@ import org.sephire.gamebook.core.domain.shared.events.EventEmitter;
 public class EventEmitterInMemoryImpl implements EventEmitter {
 
     Map<Class<? extends DomainEvent>, List<Function1<? extends DomainEvent, ?>>> subscriptions;
+
+    public EventEmitterInMemoryImpl() {
+        this.subscriptions = HashMap.empty();
+    }
 
     public void registerListener(Class<? extends DomainEvent> eventType, Function1<? extends DomainEvent, ?> listener) {
         List<Function1<? extends DomainEvent, ?>> newListeners = subscriptions
