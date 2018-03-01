@@ -5,10 +5,11 @@
 
     <groupId>org.sephire.gamebook</groupId>
     <artifactId>parent</artifactId>
-    <version>0.1.0</version>
+    <version>1.0.0-SNAPSHOT</version>
     <modules>
         <module>core</module>
         <module>api</module>
+        <module>api-aws</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -22,6 +23,7 @@
         <vavr.version>0.9.1</vavr.version>
         <spring.boot.version>1.5.9.RELEASE</spring.boot.version>
         <lombok.version>1.16.18</lombok.version>
+        <slf4j.version>1.7.25</slf4j.version>
     </properties>
 
     <build>
@@ -103,6 +105,13 @@
                 <version>${spring.boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+
+            <!-- Log management -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
             </dependency>
 
         </dependencies>
