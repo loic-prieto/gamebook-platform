@@ -12,6 +12,6 @@ package org.sephire.gamebook.core.application.shared.commands;
  * A command error can be produced by bad client input, or by a
  * server error.
  */
-public abstract class CommandError extends Throwable {
+public abstract class CommandError extends RuntimeException {
 
 }
