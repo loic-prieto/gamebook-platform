@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>parent</artifactId>
+        <groupId>org.sephire.gamebook</groupId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>api-aws</artifactId>
+    <description>This is the public api for the gamebook server based on AWS Lambda</description>
+
+    <properties>
+        <l4j2-aws-adapter.version>1.1.0</l4j2-aws-adapter.version>
+        <aws-core.version>1.2.0</aws-core.version>
+        <spring-lambda.version>1.1.0</spring-lambda.version>
+    </properties>
+
+    <dependencies>
+
+        <!-- Gamebook dependencies -->
+        <dependency>
+            <groupId>org.sephire.gamebook</groupId>
+            <artifactId>core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- AWS Dependencies -->
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-lambda-java-core</artifactId>
+            <version>${aws-core.version}</version>
+        </dependency>
+
+        <!-- Lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
+        <!-- Logging done through AWS CloudWatch -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-lambda-java-log4j2</artifactId>
+            <version>${l4j2-aws-adapter.version}</version>
+        </dependency>
+
+        <!-- Spring dependencies -->
+        <dependency>
+            <groupId>me.ccampo</groupId>
+            <artifactId>spring-aws-lambda</artifactId>
+            <version>${spring-lambda.version}</version>
+        </dependency>
+
+    </dependencies>
+
+
+</project>
