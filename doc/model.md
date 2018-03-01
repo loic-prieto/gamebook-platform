@@ -62,7 +62,7 @@
 - use cases
   - Create user account
   - disable user account
-  - create sephire.org.gamebook info
+  - create gamebook info
   - set default bank account
   - add book to owned list
 
@@ -72,14 +72,14 @@
 - bank account (BankAccount)
 - price (Price)
 - use cases:
-  - upload sephire.org.gamebook
-  - export sephire.org.gamebook
-  - disable sephire.org.gamebook
-  - enable sephire.org.gamebook
-  - set sephire.org.gamebook price
+  - upload gamebook
+  - export gamebook
+  - disable gamebook
+  - enable gamebook
+  - set gamebook price
   - attach bank account
   - unattach bank account
-  - delete sephire.org.gamebook info
+  - delete gamebook info
   
 ### Price
 - value
