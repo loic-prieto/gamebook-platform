@@ -45,14 +45,6 @@ public abstract class BaseHandler<I, O> implements RequestHandler<I, O>
     static protected final ApplicationComponent injector = DaggerApplicationComponent.builder().build();
 
     /**
-     * Initialization code. primarily used to initialize dependencies
-     */
-    protected void init()
-    {
-        // do nothing
-    }
-
-    /**
      * process the request as would normally be done in the
      * <code>handleRequest</code> method.
      *
@@ -80,9 +72,6 @@ public abstract class BaseHandler<I, O> implements RequestHandler<I, O>
     @Override
     public final O handleRequest(I input, Context context)
     {
-        // 1. initialize
-        init();
-
         // 2. process
         O output = process(input, context);
 
