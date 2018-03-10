@@ -1,25 +1,32 @@
 package org.sephire.gamebook.awsapi.account;
 
 import com.amazonaws.services.lambda.runtime.Context;
-import com.amazonaws.services.lambda.runtime.RequestHandler;
 import io.vavr.collection.List;
 import io.vavr.control.Either;
+import org.sephire.gamebook.awsapi.infrastructure.BaseHandler;
 import org.sephire.gamebook.awsapi.infrastructure.CommandErrors;
 import org.sephire.gamebook.core.application.account.CreateUserAccountCommand;
 import org.sephire.gamebook.core.application.account.CreateUserAccountCommandHandler;
 import org.sephire.gamebook.core.application.shared.commands.CommandError;
 import org.sephire.gamebook.core.domain.model.account.UserAccount;
 
-public class CreateUserAccountFunction implements RequestHandler<CreateUserAccountCommand, UserAccount> {
+import javax.inject.Inject;
 
-    private CreateUserAccountCommandHandler createUserAccountCommandHandler;
+public class CreateUserAccountFunction extends BaseHandler<CreateUserAccountCommand,UserAccount> {
+
+    @Inject
+    CreateUserAccountCommandHandler createUserAccountCommandHandler;
 
     public CreateUserAccountFunction(CreateUserAccountCommandHandler createUserAccountCommandHandler) {
         this.createUserAccountCommandHandler = createUserAccountCommandHandler;
     }
 
+    public CreateUserAccountFunction() {
+        this(injector.getCreateUserAccountCommand());
+    }
+
     @Override
-    public UserAccount handleRequest(CreateUserAccountCommand command, Context context) {
+    protected UserAccount process(CreateUserAccountCommand command, Context context) {
         Either<List<CommandError>, UserAccount> result = createUserAccountCommandHandler.execute(command);
         if (result.isLeft()) {
             String errors = result.getLeft()
@@ -31,4 +38,5 @@ public class CreateUserAccountFunction implements RequestHandler<CreateUserAccou
 
         return result.get();
     }
+
 }

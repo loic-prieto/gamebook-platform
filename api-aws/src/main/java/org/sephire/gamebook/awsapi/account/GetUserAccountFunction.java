@@ -1,10 +1,10 @@
 package org.sephire.gamebook.awsapi.account;
 
 import com.amazonaws.services.lambda.runtime.Context;
-import com.amazonaws.services.lambda.runtime.RequestHandler;
 import io.vavr.collection.List;
 import io.vavr.control.Either;
 import io.vavr.control.Option;
+import org.sephire.gamebook.awsapi.infrastructure.BaseHandler;
 import org.sephire.gamebook.awsapi.infrastructure.CommandErrors;
 import org.sephire.gamebook.core.application.account.GetUserAccountCommand;
 import org.sephire.gamebook.core.application.account.GetUserAccountCommandHandler;
@@ -12,16 +12,23 @@ import org.sephire.gamebook.core.application.account.UserNotFoundError;
 import org.sephire.gamebook.core.application.shared.commands.CommandError;
 import org.sephire.gamebook.core.domain.model.account.UserAccount;
 
-public class GetUserAccountFunction implements RequestHandler<GetUserAccountCommand, UserAccount> {
+import javax.inject.Inject;
 
-    private GetUserAccountCommandHandler getUserAccountCommandHandler;
+public class GetUserAccountFunction extends BaseHandler<GetUserAccountCommand, UserAccount> {
+
+    @Inject
+    GetUserAccountCommandHandler getUserAccountCommandHandler;
 
     public GetUserAccountFunction(GetUserAccountCommandHandler getUserAccountCommandHandler) {
         this.getUserAccountCommandHandler = getUserAccountCommandHandler;
     }
 
+    public GetUserAccountFunction() {
+        this(injector.getGetUserAccountCommand());
+    }
+
     @Override
-    public UserAccount handleRequest(GetUserAccountCommand command, Context context) {
+    public UserAccount process(GetUserAccountCommand command, Context context) {
         Either<List<CommandError>, Option<UserAccount>> result = getUserAccountCommandHandler.execute(command);
         if (result.isLeft()) {
             String errors = result.getLeft()

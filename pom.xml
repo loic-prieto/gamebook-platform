@@ -21,9 +21,10 @@
         <junit.jupiter.version>5.0.2</junit.jupiter.version>
         <junit.platform.version>1.0.2</junit.platform.version>
         <vavr.version>0.9.1</vavr.version>
-        <spring.boot.version>1.5.9.RELEASE</spring.boot.version>
+        <dagger.version>2.15</dagger.version>
         <lombok.version>1.16.18</lombok.version>
         <slf4j.version>1.7.25</slf4j.version>
+        <maven.shade.plugin.version>3.1.0</maven.shade.plugin.version>
     </properties>
 
     <build>
@@ -97,14 +98,11 @@
                 <scope>test</scope>
             </dependency>
 
-            <!-- Spring -->
+            <!-- Dependency injection with Dagger -->
             <dependency>
-                <!-- Import dependency management from Spring Boot -->
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${spring.boot.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
+                <groupId>com.google.dagger</groupId>
+                <artifactId>dagger</artifactId>
+                <version>${dagger.version}</version>
             </dependency>
 
             <!-- Log management -->

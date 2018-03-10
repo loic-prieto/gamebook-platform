@@ -1,29 +1,29 @@
-package org.sephire.gamebook.awsapi.configuration.spring;
+package org.sephire.gamebook.awsapi.configuration.dagger;
 
+import dagger.Module;
+import dagger.Provides;
 import org.sephire.gamebook.core.domain.model.account.UserAccountRepository;
 import org.sephire.gamebook.core.domain.model.book.GamebookRepository;
 import org.sephire.gamebook.core.domain.shared.events.EventEmitter;
 import org.sephire.gamebook.core.infrastructure.account.UserAccountRepositoryInMemoryImpl;
 import org.sephire.gamebook.core.infrastructure.book.GamebookRepositoryInMemoryImpl;
 import org.sephire.gamebook.core.infrastructure.events.EventEmitterInMemoryImpl;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
-@Configuration
+@Module
 public class GamebookCoreServices {
 
-    @Bean
-    public EventEmitter eventEmitter() {
+    @Provides
+    public static EventEmitter eventEmitter() {
         return new EventEmitterInMemoryImpl();
     }
 
-    @Bean
-    public UserAccountRepository userAccountRepository() {
+    @Provides
+    public static UserAccountRepository userAccountRepository() {
         return new UserAccountRepositoryInMemoryImpl();
     }
 
-    @Bean
-    public GamebookRepository gamebookRepository() {
+    @Provides
+    public static GamebookRepository gamebookRepository() {
         return new GamebookRepositoryInMemoryImpl();
     }
 }
