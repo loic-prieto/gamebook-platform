@@ -1,0 +1,26 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: "AWS::Serverless-2016-10-31"
+
+Globals:
+  Function:
+    Runtime: java8
+    CodeUri: ./target/api-aws-1.0.0-SNAPSHOT.jar
+    MemorySize: 128
+    Timeout: 10
+
+Resources:
+  CreateUserAccountFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: GamebookPlatformCreateUserAccount
+      Handler: org.sephire.gamebook.awsapi.account.CreateUserAccountFunction::handleRequest
+      Description: Creates a user account from the given email and alias
+      Role: "arn:aws:iam::XXX:role/service-role/GamebookPlatformLambdas"
+
+  GetUserAccountFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: GamebookPlatformGetUserAccount
+      Handler: org.sephire.gamebook.awsapi.account.GetUserAccountFunction::handleRequest
+      Description: Gets the information related to an account
+      Role: "arn:aws:iam::XXX:role/service-role/GamebookPlatformLambdas"
