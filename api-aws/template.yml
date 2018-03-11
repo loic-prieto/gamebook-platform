@@ -13,6 +13,12 @@ Resources:
       MemorySize: 128
       Timeout: 10
       Role: "arn:aws:iam::XXX:role/service-role/GamebookPlatformLambdas"
+      Events:
+        CreateAccountResource:
+          Type: Api
+          Properties:
+            Path: /user-account
+            Method: post
 
   GetUserAccountFunction:
     Type: AWS::Serverless::Function
@@ -25,3 +31,9 @@ Resources:
       MemorySize: 128
       Timeout: 10
       Role: "arn:aws:iam::XXX:role/service-role/GamebookPlatformLambdas"
+      Events:
+        GetAccountResource:
+          Type: Api
+          Properties:
+            Path: /user-account/{accountId}
+            Method: get

@@ -15,7 +15,7 @@
     <properties>
         <l4j2-aws-adapter.version>1.1.0</l4j2-aws-adapter.version>
         <aws-core.version>1.2.0</aws-core.version>
-        <spring-lambda.version>1.1.0</spring-lambda.version>
+        <jsonizer.version>0.9.19</jsonizer.version>
     </properties>
 
     <dependencies>
@@ -40,6 +40,13 @@
             <artifactId>lombok</artifactId>
         </dependency>
 
+        <!-- Vavr -->
+        <dependency>
+            <groupId>io.vavr</groupId>
+            <artifactId>vavr</artifactId>
+            <version>${vavr.version}</version>
+        </dependency>
+
         <!-- Logging done through AWS CloudWatch -->
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -55,6 +62,13 @@
         <dependency>
             <groupId>com.google.dagger</groupId>
             <artifactId>dagger</artifactId>
+        </dependency>
+
+        <!-- Json parsing -->
+        <dependency>
+            <groupId>com.jsoniter</groupId>
+            <artifactId>jsoniter</artifactId>
+            <version>${jsonizer.version}</version>
         </dependency>
 
     </dependencies>

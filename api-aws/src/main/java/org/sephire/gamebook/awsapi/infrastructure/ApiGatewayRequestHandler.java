@@ -16,9 +16,13 @@
 package org.sephire.gamebook.awsapi.infrastructure;
 
 import com.amazonaws.services.lambda.runtime.Context;
-import com.amazonaws.services.lambda.runtime.RequestHandler;
+import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import org.sephire.gamebook.awsapi.configuration.dagger.ApplicationComponent;
 import org.sephire.gamebook.awsapi.configuration.dagger.DaggerApplicationComponent;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * <p>
@@ -39,46 +43,36 @@ import org.sephire.gamebook.awsapi.configuration.dagger.DaggerApplicationCompone
  *
  * @author Shalabh Jaiswal
  */
-public abstract class BaseHandler<I, O> implements RequestHandler<I, O>
+public abstract class ApiGatewayRequestHandler<REQUEST, RESPONSE> implements RequestStreamHandler
 {
     // dagger app component
-    static protected final ApplicationComponent injector = DaggerApplicationComponent.builder().build();
+    private ApplicationComponent injector;
 
     /**
-     * process the request as would normally be done in the
-     * <code>handleRequest</code> method.
+     * Functions must implement the processing handler.
+     * They receive an input http request and must return an output.
      *
-     * @param input
+     * All ApiGateway boilerplate is handled by this parent class.
+     *
+     * @param request A fully parsed ApiGateway event with optional body entity parsed if json
      * @param context
      * @return
      */
-    protected abstract O process(I input, Context context);
+    protected abstract ApiGatewayHttpResponse<RESPONSE> process(ApiGatewayHttpRequest<REQUEST> request, Context context);
 
-    /**
-     * release resources if any.
-     */
-    protected void destroy()
-    {
-        // do nothing
+    protected ApplicationComponent getInjector() {
+        if (injector == null) {
+            injector = DaggerApplicationComponent.builder().build();
+        }
+        return injector;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * com.amazonaws.services.lambda.runtime.RequestHandler#handleRequest(java.
-     * lang.Object, com.amazonaws.services.lambda.runtime.Context)
-     */
     @Override
-    public final O handleRequest(I input, Context context)
-    {
-        // 2. process
-        O output = process(input, context);
-
-        // 3. destroy
-        destroy();
-
-        return output;
+    public void handleRequest(InputStream inputStream, OutputStream outputStream, Context context) throws IOException {
     }
+
+    protected abstract Class<REQUEST> getInputClass();
+
+    protected abstract Class<RESPONSE> getOutputClass();
 
 }
