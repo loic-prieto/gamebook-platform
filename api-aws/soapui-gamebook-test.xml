@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:soapui-project xmlns:con="http://eviware.com/soapui/config" id="3b4095ae-206a-410e-845e-6ee640a669c6"
+                    activeEnvironment="Default" name="Gamebook Platform" resourceRoot="" soapui-version="5.4.0">
+    <con:settings/>
+    <con:interface xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="con:RestService"
+                   id="db628e38-ea4b-47f3-a2ed-322fa3591ab7" wadlVersion="http://wadl.dev.java.net/2009/02"
+                   name="http://127.0.0.1:3000" type="rest">
+        <con:settings/>
+        <con:definitionCache/>
+        <con:endpoints>
+            <con:endpoint>http://127.0.0.1:3000</con:endpoint>
+        </con:endpoints>
+        <con:resource name="User accounts" path="/user-account" id="c580d836-0c6f-4e6e-accb-af91a878df86">
+            <con:settings/>
+            <con:parameters/>
+            <con:method name="List" id="0d638fe0-5ad1-4a1d-aec4-9156a9178052" method="GET">
+                <con:settings/>
+                <con:parameters/>
+                <con:request name="Request 1" id="8f4b737d-93ac-41d7-9d1f-e4332aac7972" mediaType="application/json">
+                    <con:settings/>
+                    <con:endpoint>http://127.0.0.1:3000</con:endpoint>
+                    <con:request/>
+                    <con:credentials>
+                        <con:authType>No Authorization</con:authType>
+                    </con:credentials>
+                    <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                    <con:jmsPropertyConfig/>
+                    <con:parameters/>
+                </con:request>
+            </con:method>
+            <con:method name="Create" id="7d659d52-fe1e-4b3d-8772-1b80c23f28fa" method="POST">
+                <con:settings/>
+                <con:parameters/>
+                <con:representation type="REQUEST">
+                    <con:mediaType>application/json</con:mediaType>
+                    <con:params/>
+                </con:representation>
+                <con:representation type="FAULT">
+                    <con:mediaType>application/json</con:mediaType>
+                    <con:status>502</con:status>
+                    <con:params/>
+                    <con:element xmlns:user="http://127.0.0.1/user-account">user:Fault</con:element>
+                </con:representation>
+                <con:request name="Request 1" id="e72e83aa-5863-4287-a822-936bee91904a" mediaType="application/json"
+                             postQueryString="false">
+                    <con:settings>
+                        <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry
+                            key="Accept" value="application/json" xmlns="http://eviware.com/soapui/config"/>
+                        </con:setting>
+                    </con:settings>
+                    <con:endpoint>http://127.0.0.1:3000</con:endpoint>
+                    <con:request>{
+                        "email":"loic@gamebook-platform.com"
+                        "alias":"loic"
+                        }
+                    </con:request>
+                    <con:originalUri>http://127.0.0.1/user-account</con:originalUri>
+                    <con:credentials>
+                        <con:selectedAuthProfile>No Authorization</con:selectedAuthProfile>
+                        <con:authType>No Authorization</con:authType>
+                    </con:credentials>
+                    <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                    <con:jmsPropertyConfig/>
+                    <con:parameters/>
+                </con:request>
+            </con:method>
+        </con:resource>
+        <con:resource name="User account" path="/user-account/{accountId}" id="07242466-51e9-4609-ad6a-c4959b5d0e58">
+            <con:settings/>
+            <con:parameters>
+                <con:parameter>
+                    <con:name>accountId</con:name>
+                    <con:value>accountId</con:value>
+                    <con:style>TEMPLATE</con:style>
+                    <con:default>accountId</con:default>
+                </con:parameter>
+            </con:parameters>
+            <con:method name="Get detail" id="ddd3f5c3-9025-4728-b263-29a98a189e22" method="GET">
+                <con:settings/>
+                <con:parameters/>
+                <con:request name="Request 1" id="02322b43-35a1-4288-94c6-6aeab99b262b" mediaType="application/json">
+                    <con:settings/>
+                    <con:endpoint>http://127.0.0.1:3000</con:endpoint>
+                    <con:request/>
+                    <con:credentials>
+                        <con:authType>No Authorization</con:authType>
+                    </con:credentials>
+                    <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                    <con:jmsPropertyConfig/>
+                    <con:parameters>
+                        <entry key="accountId" value="1" xmlns="http://eviware.com/soapui/config"/>
+                    </con:parameters>
+                </con:request>
+            </con:method>
+        </con:resource>
+    </con:interface>
+    <con:properties/>
+    <con:wssContainer/>
+    <con:oAuth2ProfileContainer/>
+    <con:oAuth1ProfileContainer/>
+    <con:sensitiveInformation/>
+</con:soapui-project>
