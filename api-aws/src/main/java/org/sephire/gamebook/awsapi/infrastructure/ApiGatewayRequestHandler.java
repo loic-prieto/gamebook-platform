@@ -84,12 +84,9 @@ public abstract class ApiGatewayRequestHandler<REQUEST, RESPONSE, COMMAND_HANDLE
 
     @Override
     public void handleRequest(InputStream inputStream, OutputStream outputStream, Context context) throws IOException {
-        // Build the http request from the api gateway event
         ApiGatewayHttpRequest<REQUEST> request = new ApiGatewayHttpRequest(inputStream, getInputClass());
-
         ApiGatewayHttpResponse<RESPONSE> response = process(request, context);
-
-
+        response.sendTo(outputStream);
     }
 
     /**
