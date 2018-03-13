@@ -4,7 +4,9 @@ import com.amazonaws.services.lambda.runtime.Context;
 import io.vavr.collection.List;
 import io.vavr.control.Either;
 import io.vavr.control.Option;
-import org.sephire.gamebook.awsapi.infrastructure.BaseHandler;
+import org.sephire.gamebook.awsapi.infrastructure.ApiGatewayHttpRequest;
+import org.sephire.gamebook.awsapi.infrastructure.ApiGatewayHttpResponse;
+import org.sephire.gamebook.awsapi.infrastructure.ApiGatewayRequestHandler;
 import org.sephire.gamebook.awsapi.infrastructure.CommandErrors;
 import org.sephire.gamebook.core.application.account.GetUserAccountCommand;
 import org.sephire.gamebook.core.application.account.GetUserAccountCommandHandler;
@@ -12,12 +14,7 @@ import org.sephire.gamebook.core.application.account.UserNotFoundError;
 import org.sephire.gamebook.core.application.shared.commands.CommandError;
 import org.sephire.gamebook.core.domain.model.account.UserAccount;
 
-import javax.inject.Inject;
-
-public class GetUserAccountFunction extends BaseHandler<GetUserAccountCommand, UserAccount> {
-
-    @Inject
-    GetUserAccountCommandHandler getUserAccountCommandHandler;
+public class GetUserAccountFunction extends ApiGatewayRequestHandler<GetUserAccountCommand, UserAccount, GetUserAccountCommandHandler> {
 
     public GetUserAccountFunction(GetUserAccountCommandHandler getUserAccountCommandHandler) {
         this.getUserAccountCommandHandler = getUserAccountCommandHandler;
@@ -28,7 +25,8 @@ public class GetUserAccountFunction extends BaseHandler<GetUserAccountCommand, U
     }
 
     @Override
-    public UserAccount process(GetUserAccountCommand command, Context context) {
+    public ApiGatewayHttpResponse<UserAccount> process(ApiGatewayHttpRequest<GetUserAccountCommand> command, Context context) {
+        get
         Either<List<CommandError>, Option<UserAccount>> result = getUserAccountCommandHandler.execute(command);
         if (result.isLeft()) {
             String errors = result.getLeft()
