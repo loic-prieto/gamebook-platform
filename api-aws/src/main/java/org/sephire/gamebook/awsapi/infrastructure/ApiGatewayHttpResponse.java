@@ -24,10 +24,6 @@ public class ApiGatewayHttpResponse<ENTITY> {
         this.headers = headers;
     }
 
-    public ApiGatewayHttpResponse(HttpStatusCode statusCode, Map<String, String> headers) {
-        this(statusCode, headers, null);
-    }
-
     /**
      * Convenience method to build headers for this response.
      * To be used like so:
@@ -87,6 +83,38 @@ public class ApiGatewayHttpResponse<ENTITY> {
                 .write(responseString);
     }
 
+    public static <ENTITY> Builder builder() {
+        return new Builder<ENTITY>();
+    }
+
+    public static class Builder<ENTITY> {
+        private HttpStatusCode statusCode;
+        private Map<String, String> headers;
+        private ENTITY body;
+
+        public Builder<ENTITY> setStatusCode(HttpStatusCode code) {
+            this.statusCode = statusCode;
+            return this;
+        }
+
+        public Builder<ENTITY> setheaders(Map<String, String> headers) {
+            this.headers = headers;
+            return this;
+        }
+
+        public Builder<ENTITY> setBody(ENTITY body) {
+            this.body = body;
+            return this;
+        }
+
+        public ApiGatewayHttpResponse<ENTITY> build() {
+            if (statusCode == null || headers == null) {
+                throw new IllegalArgumentException("Status code and headers are mandatory parameters");
+            }
+            return new ApiGatewayHttpResponse<ENTITY>(statusCode, headers, body);
+        }
+    }
+
     /**
      * Models an HTTP Response in JSON-digestible format.
      */
@@ -94,13 +122,13 @@ public class ApiGatewayHttpResponse<ENTITY> {
     private class HTTPResponse {
         private int statusCode;
         private java.util.Map<String, String> headers;
-        private ENTITY entity;
+        private ENTITY body;
 
         public HTTPResponse(ApiGatewayHttpResponse<ENTITY> response) {
             this.statusCode = response.statusCode.getCode();
             this.headers = response.headers.toJavaMap();
             if (response.entity.isDefined()) {
-                entity = response.entity.get();
+                body = response.entity.get();
             }
         }
     }

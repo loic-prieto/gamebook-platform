@@ -21,9 +21,13 @@ import io.vavr.control.Option;
 import org.sephire.gamebook.awsapi.configuration.dagger.ApplicationComponent;
 import org.sephire.gamebook.awsapi.configuration.dagger.DaggerApplicationComponent;
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
+import static org.sephire.gamebook.awsapi.infrastructure.ReflectionUtils.getParameterClass;
+import static org.sephire.gamebook.awsapi.infrastructure.ReflectionUtils.isParameterEmpty;
 
 /**
  * <p>
@@ -44,16 +48,32 @@ import java.io.OutputStream;
  *
  * @author Shalabh Jaiswal
  */
-public abstract class ApiGatewayRequestHandler<REQUEST, RESPONSE, COMMAND_HANDLER> implements RequestStreamHandler
-{
-    // dagger app component
-    private ApplicationComponent injector;
+public abstract class ApiGatewayRequestHandler<REQUEST_ENTITY, RESPONSE_ENTITY, COMMAND_HANDLER>
+        implements RequestStreamHandler {
+
+    private static final int REQUEST_ENTITY_PARAMETER_POSITION = 0;
+    private static final int COMMAND_HANDLER_PARAMETER_POSITION = 2;
+
+    /**
+     * The default command handler for the function
+     * Can be null. I can't optionify it because of
+     * the injection performed by dagger.
+     **/
+    @Inject
+    private COMMAND_HANDLER commandHandler;
 
     public ApiGatewayRequestHandler(ApplicationComponent injector) {
-        this.injector = injector;
+        // Only inject the handler if it is not Void
+        if (!isParameterEmpty(this.getClass(), COMMAND_HANDLER_PARAMETER_POSITION)) {
+            injector.inject(this);
+        }
     }
 
+    /**
+     * Constructor for AWS Lambda
+     */
     public ApiGatewayRequestHandler() {
+        this(DaggerApplicationComponent.create());
     }
 
     /**
@@ -63,80 +83,34 @@ public abstract class ApiGatewayRequestHandler<REQUEST, RESPONSE, COMMAND_HANDLE
      * All ApiGateway boilerplate is handled by this parent class.
      *
      * @param request A fully parsed ApiGateway event with optional body entity parsed if json
-     * @param context
-     * @return
+     * @param context an AWs Lambda request context
+     * @return a fully initialized ApiGatewayHttpResponse that will be serialized as output of the response.
      */
-    protected abstract ApiGatewayHttpResponse<RESPONSE> process(ApiGatewayHttpRequest<REQUEST> request, Context context);
-
-    /**
-     * Get a dependency injector factory for the application.
-     * If the AWS Function follows the Function->DomainCommand model,
-     * the subclass won't need this injector.
-     *
-     * @return
-     */
-    protected ApplicationComponent getInjector() {
-        if (injector == null) {
-            injector = DaggerApplicationComponent.builder().build();
-        }
-        return injector;
-    }
+    protected abstract ApiGatewayHttpResponse<RESPONSE_ENTITY> process(ApiGatewayHttpRequest<REQUEST_ENTITY> request, Context context);
 
     @Override
     public void handleRequest(InputStream inputStream, OutputStream outputStream, Context context) throws IOException {
-        ApiGatewayHttpRequest<REQUEST> request = new ApiGatewayHttpRequest(inputStream, getInputClass());
-        ApiGatewayHttpResponse<RESPONSE> response = process(request, context);
+        // If the request entity parameter is empty, no need to parse it
+        Class<?> genericEntityClass = getParameterClass(this.getClass(), REQUEST_ENTITY_PARAMETER_POSITION);
+        Option<Class<REQUEST_ENTITY>> entityClass =
+                genericEntityClass.getName().equals(Void.class) ?
+                        Option.none() :
+                        Option.of(genericEntityClass).map(clazz -> (Class<REQUEST_ENTITY>) clazz);
+
+        ApiGatewayHttpRequest<REQUEST_ENTITY> request = new ApiGatewayHttpRequest(inputStream, entityClass);
+        ApiGatewayHttpResponse<RESPONSE_ENTITY> response = process(request, context);
         response.sendTo(outputStream);
     }
 
     /**
-     * To be implemented by subclasses if the function admits a body entity.
-     * <p>
-     * For the moment, this solution will have to do to get the
-     * input entity while avoiding performance penalties by doing advanced
-     * reflection fuckery to get the class of the parameterized type.
-     * <p>
-     * <p>
-     * TODO: Think of a better way to handle this
-     *
-     * @return
-     */
-    protected Option<Class<REQUEST>> getInputClass() {
-        return Option.none();
-    }
-
-    /**
-     * To be implemented by subclasses if the function returns a body entity.
-     * <p>
-     * For the moment, this solution will have to do to get the
-     * output entity while avoiding performance penalties by doing advanced
-     * reflection fuckery to get the class of the parameterized type.
-     * TODO: Think of a better way to handle this
-     *
-     * @return
-     */
-    protected Option<Class<RESPONSE>> getOutputClass() {
-        return Option.none();
-    }
-
-    /**
-     * Following DDD concepts, an AWS Function is just an adapter to
-     * the application's domain commands. This base class assumes that
-     * each AWS Function is mapped to a domain command, and thus, it can
-     * be automatically injected if the class is specified.
-     *
-     * @return
-     */
-    protected Option<Class<COMMAND_HANDLER>> getHandlerClass() {
-        return Option.none();
-    }
-
-    /**
      * Gets an injected command handler.
+     * This will return something if the command handler class
+     * has been defined in the overriden getHandlerClass method
+     * by the subclass.
      *
      * @return
      */
     protected Option<COMMAND_HANDLER> getCommandHandler() {
-        return Option.none();
+        return Option.of(this.commandHandler);
     }
 }
