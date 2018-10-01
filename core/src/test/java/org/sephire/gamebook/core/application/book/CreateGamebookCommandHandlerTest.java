@@ -38,13 +38,13 @@ public class CreateGamebookCommandHandlerTest {
     @DisplayName("when executed with valid parameters,")
     @Test
     public void testWithValidParams() {
-        CreateGamebookCommandHandler handler = new CreateGamebookCommandHandler(new NoopMockBookRepository(), mockEventEmitter);
-        CreateGamebookCommand validParams = new CreateGamebookCommand(
+        var handler = new CreateGamebookCommandHandler(new NoopMockBookRepository(), mockEventEmitter);
+        var validParams = new CreateGamebookCommand(
                 "id",
                 "author",
                 new LocalizedText(Tuple.of(Locale.ENGLISH, "test title")));
 
-        Either result = handler.execute(validParams);
+        var result = handler.execute(validParams);
 
         assertTrue(result.isRight(), "should return succesful result");
         assertTrue(mockEventEmitter.hasFiredEventOfType(GamebookCreatedEvent.class), "should fire a GamebookCreatedEvent event");
