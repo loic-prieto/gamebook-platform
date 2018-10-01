@@ -9,6 +9,7 @@
     <modules>
         <module>core</module>
         <module>api-aws</module>
+        <module>editor</module>
     </modules>
     <packaging>pom</packaging>
 
