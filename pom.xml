@@ -10,6 +10,7 @@
         <module>core</module>
         <module>api-aws</module>
         <module>editor</module>
+        <module>desktop-client</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -35,7 +36,7 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.8.0</version>
                     <configuration>
-                        <release>11</release>
+                        <release>14</release>
                     </configuration>
                 </plugin>
 
